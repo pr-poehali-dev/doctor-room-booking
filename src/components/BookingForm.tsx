@@ -102,6 +102,9 @@ const BookingForm = () => {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="doctor">
+                Врач <span className="text-red-500">*</span>
+              </Label>
               <Select
                 value={formData.doctorId}
                 onValueChange={(value) =>
