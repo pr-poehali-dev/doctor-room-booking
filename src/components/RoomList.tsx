@@ -38,32 +38,6 @@ const RoomList = () => {
     );
   };
 
-  const getRoomTypeColor = (type: string) => {
-    switch (type) {
-      case "examination":
-        return "bg-blue-100 text-blue-800";
-      case "surgery":
-        return "bg-red-100 text-red-800";
-      case "consultation":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getRoomTypeIcon = (type: string) => {
-    switch (type) {
-      case "examination":
-        return "Stethoscope";
-      case "surgery":
-        return "Scissors";
-      case "consultation":
-        return "MessageCircle";
-      default:
-        return "Building";
-    }
-  };
-
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">Кабинеты</h2>
@@ -81,13 +55,10 @@ const RoomList = () => {
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2">
-                    <Icon name={getRoomTypeIcon(room.type)} size={20} />
+                    <Icon name="Building" size={20} />
                     {room.name}
                   </CardTitle>
                   <div className="flex items-center gap-2">
-                    <Badge className={getRoomTypeColor(room.type)}>
-                      {room.type}
-                    </Badge>
                     <Badge variant={isOccupied ? "destructive" : "default"}>
                       {isOccupied ? "Занят" : "Свободен"}
                     </Badge>
