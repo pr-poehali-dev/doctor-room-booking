@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { Room, Doctor, Booking, NotificationData } from "@/types/booking";
+import { wsManager } from "./websocket";
 
 interface BookingStore {
   rooms: Room[];
@@ -18,6 +19,11 @@ interface BookingStore {
   clearNotifications: () => void;
   getRoomBookings: (roomId: string) => Booking[];
   getDoctorBookings: (doctorId: string) => Booking[];
+  // WebSocket синхронизация
+  syncAddBooking: (booking: Omit<Booking, "id">) => void;
+  syncUpdateBooking: (bookingId: string, updates: Partial<Booking>) => void;
+  syncDeleteBooking: (bookingId: string) => void;
+  syncCancelBooking: (bookingId: string) => void;
 }
 
 // Mock data
@@ -94,6 +100,13 @@ export const useBookingStore = create<BookingStore>((set, get) => ({
       message: `Кабинет ${room?.name} забронирован для ${doctor?.name}`,
       bookingId: newBooking.id,
     });
+
+    // Отправляем изменение через WebSocket
+    wsManager.send({
+      type: "booking_created",
+      data: newBooking,
+      timestamp: Date.now(),
+    });
   },
 
   cancelBooking: (bookingId) => {
@@ -112,6 +125,13 @@ export const useBookingStore = create<BookingStore>((set, get) => ({
       message: `Бронирование кабинета ${room?.name} отменено для ${doctor?.name}`,
       bookingId,
     });
+
+    // Отправляем изменение через WebSocket
+    wsManager.send({
+      type: "booking_cancelled",
+      data: { bookingId },
+      timestamp: Date.now(),
+    });
   },
 
   deleteBooking: (bookingId) => {
@@ -128,6 +148,13 @@ export const useBookingStore = create<BookingStore>((set, get) => ({
       message: `Запись в кабинет ${room?.name} удалена для ${doctor?.name}`,
       bookingId,
     });
+
+    // Отправляем изменение через WebSocket
+    wsManager.send({
+      type: "booking_deleted",
+      data: { bookingId },
+      timestamp: Date.now(),
+    });
   },
 
   updateBooking: (bookingId, updates) => {
@@ -141,6 +168,13 @@ export const useBookingStore = create<BookingStore>((set, get) => ({
       type: "booking_updated",
       message: `Бронирование обновлено`,
       bookingId,
+    });
+
+    // Отправляем изменение через WebSocket
+    wsManager.send({
+      type: "booking_updated",
+      data: { bookingId, updates },
+      timestamp: Date.now(),
     });
   },
 
@@ -170,5 +204,39 @@ export const useBookingStore = create<BookingStore>((set, get) => ({
     return get().bookings.filter(
       (b) => b.doctorId === doctorId && b.status !== "cancelled",
     );
+  },
+
+  // WebSocket методы для синхронизации без отправки обратно
+  syncAddBooking: (bookingData) => {
+    const newBooking: Booking = {
+      ...bookingData,
+      id: bookingData.id || Date.now().toString(),
+    };
+
+    set((state) => ({
+      bookings: [...state.bookings, newBooking],
+    }));
+  },
+
+  syncUpdateBooking: (bookingId, updates) => {
+    set((state) => ({
+      bookings: state.bookings.map((b) =>
+        b.id === bookingId ? { ...b, ...updates } : b,
+      ),
+    }));
+  },
+
+  syncDeleteBooking: (bookingId) => {
+    set((state) => ({
+      bookings: state.bookings.filter((b) => b.id !== bookingId),
+    }));
+  },
+
+  syncCancelBooking: (bookingId) => {
+    set((state) => ({
+      bookings: state.bookings.map((b) =>
+        b.id === bookingId ? { ...b, status: "cancelled" as const } : b,
+      ),
+    }));
   },
 }));
