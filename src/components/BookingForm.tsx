@@ -92,7 +92,7 @@ const BookingForm = () => {
                 <SelectContent>
                   {rooms.map((room) => (
                     <SelectItem key={room.id} value={room.id}>
-                      {room.name} - {room.type}
+                      {room.name} (до {room.capacity} чел.)
                     </SelectItem>
                   ))}
                 </SelectContent>

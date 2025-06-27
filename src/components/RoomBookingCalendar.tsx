@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useBookingStore } from "@/lib/bookingStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import Icon from "@/components/ui/icon";
 import { format, startOfWeek, addDays, isSameDay } from "date-fns";
 import { ru } from "date-fns/locale";
