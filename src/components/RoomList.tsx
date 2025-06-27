@@ -59,9 +59,7 @@ const RoomList = () => {
                     {room.name}
                   </CardTitle>
                   <div className="flex items-center gap-2">
-                    <Badge variant={isOccupied ? "destructive" : "default"}>
-                      {isOccupied ? "Занят" : "Свободен"}
-                    </Badge>
+                    {isOccupied && <Badge variant="destructive">Занят</Badge>}
                   </div>
                 </div>
               </CardHeader>

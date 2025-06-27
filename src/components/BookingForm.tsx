@@ -79,7 +79,9 @@ const BookingForm = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="room">Кабинет *</Label>
+              <Label htmlFor="room">
+                Кабинет <span className="text-red-500">*</span>
+              </Label>
               <Select
                 value={formData.roomId}
                 onValueChange={(value) =>
@@ -100,7 +102,9 @@ const BookingForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="doctor">Врач *</Label>
+              <Label htmlFor="doctor">
+                Врач <span className="text-red-500">*</span>
+              </Label>
               <Select
                 value={formData.doctorId}
                 onValueChange={(value) =>
@@ -123,7 +127,9 @@ const BookingForm = () => {
 
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="date">Дата *</Label>
+              <Label htmlFor="date">
+                Дата <span className="text-red-500">*</span>
+              </Label>
               <Input
                 type="date"
                 value={formData.date}
@@ -131,11 +137,14 @@ const BookingForm = () => {
                   setFormData((prev) => ({ ...prev, date: e.target.value }))
                 }
                 min={new Date().toISOString().split("T")[0]}
+                required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="startTime">Время начала *</Label>
+              <Label htmlFor="startTime">
+                Время начала <span className="text-red-500">*</span>
+              </Label>
               <Input
                 type="time"
                 value={formData.startTime}
@@ -145,17 +154,21 @@ const BookingForm = () => {
                     startTime: e.target.value,
                   }))
                 }
+                required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="endTime">Время окончания *</Label>
+              <Label htmlFor="endTime">
+                Время окончания <span className="text-red-500">*</span>
+              </Label>
               <Input
                 type="time"
                 value={formData.endTime}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, endTime: e.target.value }))
                 }
+                required
               />
             </div>
           </div>
