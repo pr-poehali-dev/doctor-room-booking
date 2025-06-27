@@ -24,26 +24,18 @@ const mockRooms: Room[] = [
   {
     id: "1",
     name: "Малый",
-    capacity: 2,
-    equipment: ["Стетоскоп", "Тонометр"],
   },
   {
     id: "2",
     name: "Большой",
-    capacity: 4,
-    equipment: ["Компьютер", "Принтер"],
   },
   {
     id: "3",
     name: "Оранжерея",
-    capacity: 6,
-    equipment: ["Хирургический стол", "Анестезиология"],
   },
   {
     id: "4",
     name: "зал",
-    capacity: 8,
-    equipment: ["Проектор", "Микрофон"],
   },
 ];
 

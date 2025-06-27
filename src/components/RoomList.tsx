@@ -66,16 +66,6 @@ const RoomList = () => {
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Icon name="Users" size={16} />
-                  Вместимость: {room.capacity} человек
-                </div>
-
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Icon name="Package" size={16} />
-                  Оборудование: {room.equipment.join(", ")}
-                </div>
-
                 {currentBooking && (
                   <div className="bg-red-100 p-3 rounded-lg border border-red-200">
                     <div className="flex items-center gap-2 text-red-800 font-medium">
