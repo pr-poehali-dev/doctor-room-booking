@@ -1,7 +1,6 @@
 export interface Room {
   id: string;
   name: string;
-  type: "examination" | "surgery" | "consultation";
   capacity: number;
   equipment: string[];
 }
