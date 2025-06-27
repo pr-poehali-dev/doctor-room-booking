@@ -23,21 +23,27 @@ interface BookingStore {
 const mockRooms: Room[] = [
   {
     id: "1",
-    name: "Кабинет 101",
+    name: "Малый",
     capacity: 2,
     equipment: ["Стетоскоп", "Тонометр"],
   },
   {
     id: "2",
-    name: "Кабинет 102",
+    name: "Большой",
     capacity: 4,
     equipment: ["Компьютер", "Принтер"],
   },
   {
     id: "3",
-    name: "Операционная 1",
+    name: "Оранжерея",
     capacity: 6,
     equipment: ["Хирургический стол", "Анестезиология"],
+  },
+  {
+    id: "4",
+    name: "зал",
+    capacity: 8,
+    equipment: ["Проектор", "Микрофон"],
   },
 ];
 
