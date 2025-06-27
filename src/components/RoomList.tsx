@@ -86,11 +86,7 @@ const RoomList = () => {
                   </CardTitle>
                   <div className="flex items-center gap-2">
                     <Badge className={getRoomTypeColor(room.type)}>
-                      {room.type === "examination"
-                        ? "Осмотр"
-                        : room.type === "surgery"
-                          ? "Операционная"
-                          : "Консультация"}
+                      {room.type}
                     </Badge>
                     <Badge variant={isOccupied ? "destructive" : "default"}>
                       {isOccupied ? "Занят" : "Свободен"}
