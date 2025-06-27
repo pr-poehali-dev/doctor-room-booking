@@ -10,6 +10,7 @@ interface BookingStore {
   // Actions
   addBooking: (booking: Omit<Booking, "id">) => void;
   cancelBooking: (bookingId: string) => void;
+  deleteBooking: (bookingId: string) => void;
   updateBooking: (bookingId: string, updates: Partial<Booking>) => void;
   addNotification: (
     notification: Omit<NotificationData, "id" | "timestamp">,
@@ -109,6 +110,22 @@ export const useBookingStore = create<BookingStore>((set, get) => ({
     get().addNotification({
       type: "booking_cancelled",
       message: `Бронирование кабинета ${room?.name} отменено для ${doctor?.name}`,
+      bookingId,
+    });
+  },
+
+  deleteBooking: (bookingId) => {
+    const booking = get().bookings.find((b) => b.id === bookingId);
+    const doctor = get().doctors.find((d) => d.id === booking?.doctorId);
+    const room = get().rooms.find((r) => r.id === booking?.roomId);
+
+    set((state) => ({
+      bookings: state.bookings.filter((b) => b.id !== bookingId),
+    }));
+
+    get().addNotification({
+      type: "booking_cancelled",
+      message: `Запись в кабинет ${room?.name} удалена для ${doctor?.name}`,
       bookingId,
     });
   },

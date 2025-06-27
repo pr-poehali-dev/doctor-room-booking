@@ -6,7 +6,7 @@ import { format, startOfWeek, addDays, isSameDay } from "date-fns";
 import { ru } from "date-fns/locale";
 
 const RoomBookingCalendar = () => {
-  const { bookings, rooms, doctors } = useBookingStore();
+  const { bookings, rooms, doctors, deleteBooking } = useBookingStore();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
 
@@ -188,12 +188,21 @@ const RoomBookingCalendar = () => {
                             {format(booking.endTime, "HH:mm")}
                           </span>
                         </div>
-                        <div
-                          className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getStatusColor(booking.status)} self-start`}
-                        >
-                          {booking.status === "confirmed" && "Подтверждено"}
-                          {booking.status === "pending" && "В ожидании"}
-                          {booking.status === "cancelled" && "Отменено"}
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getStatusColor(booking.status)}`}
+                          >
+                            {booking.status === "confirmed" && "Подтверждено"}
+                            {booking.status === "pending" && "В ожидании"}
+                            {booking.status === "cancelled" && "Отменено"}
+                          </div>
+                          <button
+                            onClick={() => deleteBooking(booking.id)}
+                            className="p-1 hover:bg-red-100 rounded-lg text-red-600 hover:text-red-800 transition-colors"
+                            title="Удалить запись"
+                          >
+                            <Icon name="Trash2" size={18} />
+                          </button>
                         </div>
                       </div>
 
