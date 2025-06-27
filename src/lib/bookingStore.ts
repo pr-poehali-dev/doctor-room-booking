@@ -40,9 +40,12 @@ const mockRooms: Room[] = [
 ];
 
 const mockDoctors: Doctor[] = [
-  { id: "1", name: "Иванов И.И.", specialization: "Терапевт" },
-  { id: "2", name: "Петрова А.С.", specialization: "Кардиолог" },
-  { id: "3", name: "Сидоров П.М.", specialization: "Хирург" },
+  { id: "1", name: "Цветкова Светлана Геннадиевна", specialization: "Врач" },
+  { id: "2", name: "Юнина Светлана Владимировна", specialization: "Врач" },
+  { id: "3", name: "Иржаева Ланна Николаевна", specialization: "Врач" },
+  { id: "4", name: "Иржаев Денис Игоревич", specialization: "Врач" },
+  { id: "5", name: "Буланова Анна Сергеевна", specialization: "Врач" },
+  { id: "6", name: "Цветков Алексей Николаевич", specialization: "Врач" },
 ];
 
 const mockBookings: Booking[] = [
