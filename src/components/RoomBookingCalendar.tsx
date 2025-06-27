@@ -8,6 +8,7 @@ import { ru } from "date-fns/locale";
 const RoomBookingCalendar = () => {
   const { bookings, rooms, doctors } = useBookingStore();
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDay, setSelectedDay] = useState<Date | null>(null);
 
   const weekStart = startOfWeek(selectedDate, { weekStartsOn: 1 });
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
@@ -77,7 +78,16 @@ const RoomBookingCalendar = () => {
           return (
             <Card
               key={day.toISOString()}
-              className={`${isToday ? "ring-2 ring-blue-500" : ""}`}
+              className={`cursor-pointer transition-all hover:shadow-md ${
+                isToday ? "ring-2 ring-blue-500" : ""
+              } ${
+                selectedDay && isSameDay(selectedDay, day)
+                  ? "ring-2 ring-green-500 bg-green-50"
+                  : ""
+              }`}
+              onClick={() =>
+                setSelectedDay(isSameDay(selectedDay, day) ? null : day)
+              }
             >
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm text-center">
@@ -131,6 +141,102 @@ const RoomBookingCalendar = () => {
           );
         })}
       </div>
+
+      {selectedDay && (
+        <Card className="mt-6 border-2 border-green-200">
+          <CardHeader>
+            <CardTitle className="text-xl flex items-center gap-2">
+              <Icon name="Calendar" size={24} />
+              Бронирования на{" "}
+              {format(selectedDay, "d MMMM yyyy", { locale: ru })}
+              <button
+                onClick={() => setSelectedDay(null)}
+                className="ml-auto p-1 hover:bg-gray-100 rounded-lg"
+              >
+                <Icon name="X" size={20} />
+              </button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {getBookingsForDay(selectedDay).length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                <Icon
+                  name="CalendarX"
+                  size={48}
+                  className="mx-auto mb-3 text-gray-300"
+                />
+                <p className="text-lg">На этот день нет бронирований</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {getBookingsForDay(selectedDay)
+                  .sort((a, b) => a.startTime.getTime() - b.startTime.getTime())
+                  .map((booking) => (
+                    <div
+                      key={booking.id}
+                      className={`p-6 rounded-xl border-2 ${getStatusColor(booking.status)}`}
+                    >
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <Icon name="Clock" size={24} />
+                          <span className="text-2xl font-bold">
+                            {format(booking.startTime, "HH:mm")} -{" "}
+                            {format(booking.endTime, "HH:mm")}
+                          </span>
+                        </div>
+                        <div
+                          className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(booking.status)}`}
+                        >
+                          {booking.status === "confirmed" && "Подтверждено"}
+                          {booking.status === "pending" && "В ожидании"}
+                          {booking.status === "cancelled" && "Отменено"}
+                        </div>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-3">
+                            <Icon name="MapPin" size={20} />
+                            <div>
+                              <p className="text-sm text-gray-600">Кабинет</p>
+                              <p className="text-lg font-semibold">
+                                {getRoomName(booking.roomId)}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            <Icon name="UserCheck" size={20} />
+                            <div>
+                              <p className="text-sm text-gray-600">Врач</p>
+                              <p className="text-lg font-semibold">
+                                {getDoctorName(booking.doctorId)}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {booking.patientName && (
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-3">
+                              <Icon name="User" size={20} />
+                              <div>
+                                <p className="text-sm text-gray-600">Пациент</p>
+                                <p className="text-lg font-semibold">
+                                  {booking.patientName}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <div className="flex items-center gap-4 text-sm">
         <div className="flex items-center gap-2">
