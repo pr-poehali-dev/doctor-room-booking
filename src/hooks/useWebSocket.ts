@@ -4,8 +4,12 @@ import { useBookingStore } from "@/lib/bookingStore";
 
 export const useWebSocket = () => {
   const [status, setStatus] = useState<ConnectionStatus>("disconnected");
-  const { addBooking, updateBooking, deleteBooking, cancelBooking } =
-    useBookingStore();
+  const {
+    syncAddBooking,
+    syncUpdateBooking,
+    syncDeleteBooking,
+    syncCancelBooking,
+  } = useBookingStore();
 
   useEffect(() => {
     const handleStatusChange = (newStatus: ConnectionStatus) => {
@@ -15,16 +19,16 @@ export const useWebSocket = () => {
     const handleMessage = (message: WebSocketMessage) => {
       switch (message.type) {
         case "booking_created":
-          addBooking(message.data);
+          syncAddBooking(message.data);
           break;
         case "booking_updated":
-          updateBooking(message.data.id, message.data.updates);
+          syncUpdateBooking(message.data.bookingId, message.data.updates);
           break;
         case "booking_deleted":
-          deleteBooking(message.data.bookingId);
+          syncDeleteBooking(message.data.bookingId);
           break;
         case "booking_cancelled":
-          cancelBooking(message.data.bookingId);
+          syncCancelBooking(message.data.bookingId);
           break;
       }
     };
@@ -42,7 +46,7 @@ export const useWebSocket = () => {
       wsManager.off("status", handleStatusChange);
       wsManager.off("message", handleMessage);
     };
-  }, [addBooking, updateBooking, deleteBooking, cancelBooking]);
+  }, [syncAddBooking, syncUpdateBooking, syncDeleteBooking, syncCancelBooking]);
 
   const sendMessage = (message: Omit<WebSocketMessage, "timestamp">) => {
     wsManager.send({

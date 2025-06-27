@@ -213,9 +213,22 @@ export const useBookingStore = create<BookingStore>((set, get) => ({
       id: bookingData.id || Date.now().toString(),
     };
 
+    // Проверяем, не существует ли уже такое бронирование
+    const existingBooking = get().bookings.find((b) => b.id === newBooking.id);
+    if (existingBooking) return;
+
+    const doctor = get().doctors.find((d) => d.id === newBooking.doctorId);
+    const room = get().rooms.find((r) => r.id === newBooking.roomId);
+
     set((state) => ({
       bookings: [...state.bookings, newBooking],
     }));
+
+    get().addNotification({
+      type: "booking_created",
+      message: `Кабинет ${room?.name} забронирован для ${doctor?.name}`,
+      bookingId: newBooking.id,
+    });
   },
 
   syncUpdateBooking: (bookingId, updates) => {
